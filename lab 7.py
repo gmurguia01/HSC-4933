@@ -72,6 +72,19 @@ data[y_col] = pd.to_numeric(data[y_col], errors="coerce")
 
 data = data.dropna()
 
+#range of X
+
+
+min_value = float(input("Enter the minimum X value: "))
+max_value = float(input("Enter the maximum X value: "))
+
+
+data = data[
+    (data[x_col] >= min_value) &
+    (data[x_col] <= max_value)
+]
+
+
 # Create scatterplot
 
 fig1, ax1 = plt.subplots(figsize=(8, 6))
@@ -140,7 +153,59 @@ if save_scatter == "y":
     fig2.savefig(scatter_file, dpi=300)
     print(f"Saved scatterplot to {scatter_file}")
 
-# Display scatterplot
 
-plt.show()
+
+# Second Y variable
+
+second_y = input("Enter a second Y variable: ").strip().lower()
+
+# Check if the column exists
+
+if second_y not in df.columns:
+    print("Invalid column name.")
+else:
+    #comparison graph
+
+    fig3, ax3 = plt.subplots(figsize=(8, 6))
+
+    #Y variable
+
+    ax3.scatter(
+        data[x_col],
+        data[y_col],
+        color="blue",
+        label=y_col
+    )
+
+    #second Y axis
+
+    ax4 = ax3.twinx()
+
+    #second Y variable
+
+    ax4.scatter(
+        data[x_col],
+        df.loc[data.index, second_y],
+        color="orange",
+        label=second_y
+    )
+
+    #title
+
+    ax3.set_xlabel(x_col)
+    ax3.set_ylabel(y_col, color="blue")
+    ax4.set_ylabel(second_y, color="orange")
+
+    ax3.set_title(f"{y_col} and {second_y} vs {x_col}")
+
+    #legends
+
+    ax3.legend(loc="upper left")
+    ax4.legend(loc="upper right")
+
+    #Diplsay
+
+    fig3.tight_layout()
+    plt.show()
+
 
